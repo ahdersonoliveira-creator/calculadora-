@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de PCS - Poder Calorífico Superior</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 650px;
+            width: 100%;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container.dark-mode {
+            background: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 26px;
+            font-weight: bold;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .container.dark-mode .header h1 {
+            color: #ecf0f1;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-header {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-theme {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-theme:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .container.dark-mode label {
+            color: #ecf0f1;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            transition: border-color 0.3s ease;
+            font-family: 'Arial', sans-serif;
+            background: white;
+            color: #2c3e50;
+        }
+
+        .container.dark-mode select,
+        .container.dark-mode input {
+            background: #34495e;
+            color: #ecf0f1;
+            border-color: #555;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .mode-selector {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .container.dark-mode .mode-selector {
+            background: #34495e;
+        }
+
+        .mode-label {
+            font-weight: bold;
+            font-size: 13px;
+            color: #2c3e50;
+        }
+
+        .container.dark-mode .mode-label {
+            color: #ecf0f1;
+        }
+
+        .btn-mode {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-mode.active {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-mode.inactive {
+            background: #e67e22;
+            color: white;
+        }
+
+        .btn-mode:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button.btn-calcular {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button.btn-calcular:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        button.btn-calcular:active {
+            transform: translateY(0);
+        }
+
+        button.btn-limpar {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #ecf0f1;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .container.dark-mode button.btn-limpar {
+            background: #555;
+            color: #ecf0f1;
+        }
+
+        button.btn-limpar:hover {
+            background: #bdc3c7;
+        }
+
+        .container.dark-mode button.btn-limpar:hover {
+            background: #666;
+        }
+
+        .results-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 25px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .container.dark-mode .results-section {
+            background: #34495e;
+            border-left-color: #3498db;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .results-section h2 {
+            color: #2c3e50;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .container.dark-mode .results-section h2 {
+            color: #ecf0f1;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #ecf0f1;
+            font-weight: bold;
+        }
+
+        .container.dark-mode .result-item {
+            border-bottom-color: #555;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #34495e;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .container.dark-mode .result-label {
+            color: #bdc3c7;
+        }
+
+        .result-value {
+            color: #e67e22;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .result-unit {
+            color: #95a5a6;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .alert-error {
+            background: #fadbd8;
+            color: #c0392b;
+            border-left: 4px solid #c0392b;
+        }
+
+        .alert-success {
+            background: #d5f4e6;
+            color: #27ae60;
+            border-left: 4px solid #27ae60;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header-buttons {
+                width: 100%;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .mode-selector {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CALCULADORA DE PCS</h1>
+            <div class="header-buttons">
+                <button class="btn-header btn-theme" onclick="toggleTheme()">🌙 MODO ESCURO</button>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <form id="calculadoraForm">
+            <div class="form-group">
+                <label for="produto">PRODUTO:</label>
+                <select id="produto" required>
+                    <option value="">Selecione um produto</option>
+                    <option value="Bonito Grado">Bonito Grado</option>
+                    <option value="Bonito Finos">Bonito Finos</option>
+                    <option value="BBranco">BBranco</option>
+                    <option value="Finos B. Branco">Finos B. Branco</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="cinza">CINZA (%):</label>
+                <input type="number" id="cinza" step="0.01" min="0" max="100" placeholder="Ex: 47" required>
+            </div>
+
+            <div class="mode-selector">
+                <span class="mode-label">CÁLCULO DE ENXOFRE:</span>
+                <button type="button" class="btn-mode active" id="btnAuto" onclick="setAutoMode()">AUTOMÁTICO</button>
+                <button type="button" class="btn-mode inactive" id="btnManual" onclick="setManualMode()">MANUAL</button>
+            </div>
+
+            <div class="form-group" id="enxofreGroup" style="display: none;">
+                <label for="enxofre">ENXOFRE (%):</label>
+                <input type="number" id="enxofre" step="0.01" min="0" max="100" placeholder="Insira o valor">
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn-calcular" onclick="calcular()">CALCULAR AGORA</button>
+                <button type="button" class="btn-limpar" onclick="limpar()">LIMPAR TUDO</button>
+            </div>
+        </form>
+
+        <div class="results-section" id="resultados">
+            <h2>RESULTADOS FINAIS</h2>
+            <div class="result-item">
+                <span class="result-label">PCS (INTEIRO)</span>
+                <span>
+                    <span class="result-value" id="pcsResult">---</span>
+                    <span class="result-unit">kcal/kg</span>
+                </span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">ENXOFRE (2 CASAS)</span>
+                <span>
+                    <span class="result-value" id="enxofreResult">---</span>
+                    <span class="result-unit">%</span>
+                </span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">VOLÁTIL (2 CASAS)</span>
+                <span>
+                    <span class="result-value" id="volatilResult">---</span>
+                    <span class="result-unit">%</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let autoMode = true;
+        let darkMode = false;
+
+        function toggleTheme() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode');
+            document.querySelector('.container').classList.toggle('dark-mode');
+            const btn = document.querySelector('.btn-theme');
+            btn.textContent = darkMode ? '☀️ MODO CLARO' : '🌙 MODO ESCURO';
+        }
+
+        function setAutoMode() {
+            autoMode = true;
+            document.getElementById('btnAuto').classList.add('active');
+            document.getElementById('btnManual').classList.remove('inactive');
+            document.getElementById('btnManual').classList.add('inactive');
+            document.getElementById('enxofreGroup').style.display = 'none';
+            document.getElementById('enxofre').value = '';
+        }
+
+        function setManualMode() {
+            autoMode = false;
+            document.getElementById('btnManual').classList.add('active');
+            document.getElementById('btnAuto').classList.remove('active');
+            document.getElementById('btnAuto').classList.add('inactive');
+            document.getElementById('enxofreGroup').style.display = 'block';
+        }
+
+        function calcularPCS(produto, cinza) {
+            if (produto === 'Bonito Grado' || produto === 'Bonito Finos') {
+                return -(86.41 * cinza) + 8334.7;
+            } else if (produto === 'BBranco' || produto === 'Finos B. Branco') {
+                return (-93.006 * cinza) + 8581.5;
+            }
+            return 0;
+        }
+
+        function calcularVolatil(produto, cinza) {
+            if (produto === 'Bonito Grado' || produto === 'Bonito Finos') {
+                return (-0.4374 * cinza) + 40.289;
+            } else if (produto === 'BBranco') {
+                return -(0.3311 * cinza) + 39.019;
+            } else if (produto === 'Finos B. Branco') {
+                return -(0.3311 * cinza) + 39.219;
+            }
+            return 0;
+        }
+
+        function calcularEnxofreAuto(produto, cinza) {
+            if (produto === 'Bonito Grado' || produto === 'Bonito Finos') {
+                return (0.025 * cinza) + 1.39;
+            } else if (produto === 'BBranco' || produto === 'Finos B. Branco') {
+                return (0.031 * cinza) + 0.85;
+            }
+            return 0;
+        }
+
+        function mostrarAlerta(mensagem, tipo = 'error') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${tipo}`;
+            alert.textContent = mensagem;
+            alert.style.display = 'block';
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 4000);
+        }
+
+        function calcular() {
+            const produto = document.getElementById('produto').value;
+            const cinzaInput = document.getElementById('cinza').value;
+
+            if (!produto) {
+                mostrarAlerta('SELECIONE UM PRODUTO!');
+                return;
+            }
+
+            if (!cinzaInput) {
+                mostrarAlerta('INSIRA O VALOR DE CINZA!');
+                return;
+            }
+
+            const cinza = parseFloat(cinzaInput);
+
+            if (isNaN(cinza) || cinza < 0 || cinza > 100) {
+                mostrarAlerta('CINZA DEVE ESTAR ENTRE 0 E 100!');
+                return;
+            }
+
+            let enxofre;
+            if (autoMode) {
+                enxofre = calcularEnxofreAuto(produto, cinza);
+            } else {
+                const enxofreInput = document.getElementById('enxofre').value;
+                if (!enxofreInput) {
+                    mostrarAlerta('INSIRA O VALOR DE ENXOFRE NO MODO MANUAL!');
+                    return;
+                }
+                enxofre = parseFloat(enxofreInput);
+                if (isNaN(enxofre) || enxofre < 0 || enxofre > 100) {
+                    mostrarAlerta('ENXOFRE DEVE ESTAR ENTRE 0 E 100!');
+                    return;
+                }
+            }
+
+            const pcs = calcularPCS(produto, cinza);
+            const volatil = calcularVolatil(produto, cinza);
+
+            document.getElementById('pcsResult').textContent = Math.round(pcs);
+            document.getElementById('enxofreResult').textContent = enxofre.toFixed(2);
+            document.getElementById('volatilResult').textContent = volatil.toFixed(2);
+
+            document.getElementById('resultados').classList.add('show');
+            mostrarAlerta('CÁLCULO REALIZADO COM SUCESSO!', 'success');
+        }
+
+        function limpar() {
+            document.getElementById('calculadoraForm').reset();
+            document.getElementById('resultados').classList.remove('show');
+            document.getElementById('alertContainer').innerHTML = '';
+            setAutoMode();
+        }
+
+        document.getElementById('calculadoraForm').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                calcular();
+            }
+        });
+    </script>
+</body>
+</html>
